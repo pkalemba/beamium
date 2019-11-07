@@ -48,9 +48,9 @@ lazy_static! {
 
 pub enum State {
     Idle,
-    Sending(Box<Future<Item = (), Error = Error> + Send>),
+    Sending(Box<dyn Future<Item = (), Error = Error> + Send>),
     Waiting,
-    Backoff(Box<Future<Item = (), Error = Error> + Send>),
+    Backoff(Box<dyn Future<Item = (), Error = Error> + Send>),
 }
 
 pub struct Sender {
@@ -333,6 +333,10 @@ impl Payload for Body {
                         trace!("we have read all the file");
                         self.reader = None;
                         break;
+                    }
+
+                    if &line == "\n" {
+                        continue;
                     }
 
                     if !line.ends_with('\n') {

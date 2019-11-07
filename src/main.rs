@@ -17,12 +17,12 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::thread::sleep;
 
 use ctrlc;
-use failure::{Error, format_err};
-use prometheus::{Encoder, gather, TextEncoder};
+use failure::{format_err, Error};
+use prometheus::{gather, Encoder, TextEncoder};
 use structopt::StructOpt;
 use tokio::prelude::*;
 use tokio::runtime::Builder;
-use warp::{Filter, path, serve};
+use warp::{path, serve, Filter};
 
 use crate::conf::Conf;
 use crate::constants::{KEEP_ALIVE_TOKIO_RUNTIME, MAX_HANDLERS_PER_REACTOR, THREAD_SLEEP};
@@ -61,9 +61,8 @@ struct Opts {
     check: bool,
 }
 
-fn main() -> Result<(), Error> {
-    // Parse command line interface in order to retrieve flags
-    let opts = Opts::from_args();
+#[paw::main]
+fn main(opts: Opts) -> Result<(), Error> {
     let _guard = log::bootstrap();
 
     // Display version

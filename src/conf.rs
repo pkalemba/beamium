@@ -126,7 +126,7 @@ impl RawConf {
         config.set_default("parameters.syslog", false)?;
         config.set_default("parameters.timeout", "500s")?;
         config.set_default("parameters.router-parallel", 1)?;
-        config.set_default("parameters.filesystem-threads", 1)?;
+        config.set_default("parameters.filesystem-threads", 100)?;
 
         // backoff parameters
         config.set_default("parameters.backoff.initial", "500ms")?;
@@ -340,7 +340,7 @@ impl TryFrom<(String, RawSink)> for Sink {
         };
 
         let size = match raw_sink.size {
-            None => String::from("1Mb"),
+            None => String::from("1Gb"),
             Some(size) => size,
         };
 
